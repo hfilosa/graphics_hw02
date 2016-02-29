@@ -94,6 +94,16 @@ Returns:
 turns m in to an identity matrix
 */
 void ident(struct matrix *m) {
+  int r;
+  int c;
+  for (r=0;r<m->rows;r++){
+    for (c=0;c<m->cols;c++){
+      if (r==c)
+	m->m[r][c]=1;
+      else
+	m->m[r][c]=0;
+    }
+  }
 }
 
 
@@ -105,6 +115,12 @@ Returns:
 multiply each element of m by x
 */
 void scalar_mult(double x, struct matrix *m) {
+  int r;
+  int c;
+  for (r=0;r<m->rows;r++){
+    for (c=0;c<m->cols;c++)
+      m->m[r][c]*=x;
+  }
 }
 
 
@@ -116,6 +132,24 @@ Returns:
 a*b -> b
 */
 void matrix_mult(struct matrix *a, struct matrix *b) {
+  int r;
+  int c;
+  int n;
+  int sum;
+  struct matrix *temp;
+  temp=new_matrix(a->rows,b->cols);
+  for (r=0;r<temp->rows;r++){
+    for (c=0;c<temp->cols;c++){
+      n=0;
+      sum=0;
+      while(n<a->cols){
+        sum+=(a->m[r][n])*(b->m[n][c]);
+	n++;
+      }
+      temp->m[r][c]=sum;
+    }
+  }
+  copy_matrix(temp,b);
 }
 
 
@@ -143,16 +177,32 @@ Inputs:  int x
 Returns: The translation matrix created using x, y and z 
 as the translation offsets.
 ====================*/
-//struct matrix * make_translate(double x, double y, double z) {}
+struct matrix * make_translate(double x, double y, double z){
+  struct matrix * ans;
+  ans=new_matrix(4,4);
+  ident(ans);
+  ans->m[3][0]=x;
+  ans->m[3][1]=y;
+  ans->m[3][2]=z;
+  return ans;
+}
 
 /*======== struct matrix * make_scale() ==========
 Inputs:  int x
          int y
          int z 
-Returns: The translation matrix creates using x, y and z
+Returns: The scaling matrix created using x, y and z
 as the scale factors
 ====================*/
-//struct matrix * make_scale(double x, double y, double z) {}
+struct matrix * make_scale(double x, double y, double z){
+  struct matrix * ans;
+  ans=new_matrix(4,4);
+  ident(ans);
+  ans->m[0][0]=x;
+  ans->m[1][1]=y;
+  ans->m[2][2]=z;
+  return ans;
+}
 
 /*======== struct matrix * make_rotX() ==========
 Inputs:  double theta
@@ -160,7 +210,16 @@ Inputs:  double theta
 Returns: The rotation matrix created using theta as the 
 angle of rotation and X as the axis of rotation.
 ====================*/
-//struct matrix * make_rotX(double theta) {}
+struct matrix * make_rotX(double theta){
+  struct matrix * ans;
+  ans=new_matrix(4,4);
+  ident(ans);
+  ans->m[1][1]=cos(theta);
+  ans->m[1][2]=(-1.0)*sin(theta);
+  ans->m[2][1]=sin(theta);
+  ans->m[2][2]=cos(theta);
+  return ans;
+}
 
 /*======== struct matrix * make_rotY() ==========
 Inputs:  double theta
@@ -168,7 +227,16 @@ Inputs:  double theta
 Returns: The rotation matrix created using theta as the 
 angle of rotation and Y as the axis of rotation.
 ====================*/
-//struct matrix * make_rotY(double theta) {}
+struct matrix * make_rotY(double theta){
+  struct matrix * ans;
+  ans=new_matrix(4,4);
+  ident(ans);
+  ans->m[0][0]=cos(theta);
+  ans->m[0][2]=(-1.0)*sin(theta);
+  ans->m[2][0]=sin(theta);
+  ans->m[2][2]=cos(theta);
+  return ans;
+}
 
 /*======== struct matrix * make_rotZ() ==========
 Inputs:  double theta
@@ -176,4 +244,13 @@ Inputs:  double theta
 Returns: The rotation matrix created using theta as the 
 angle of rotation and Z as the axis of rotation.
 ====================*/
-//struct matrix * make_rotZ(double theta) {}
+struct matrix * make_rotZ(double theta){
+  struct matrix * ans;
+  ans=new_matrix(4,4);
+  ident(ans);
+  ans->m[0][0]=cos(theta);
+  ans->m[0][1]=(-1.0)*sin(theta);
+  ans->m[1][0]=sin(theta);
+  ans->m[1][1]=cos(theta);
+  return ans;
+}
