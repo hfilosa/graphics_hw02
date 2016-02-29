@@ -8,33 +8,38 @@
 #include "matrix.h"
 
 int main() {
-
   screen s;
+  color c;
+  c.red = 0;
+  c.green = MAX_COLOR;
+  c.blue = 0;
+  clear_screen(s);
   struct matrix *edges;
-  struct matrix *transform;
-  struct matrix *m0;
-
-  edges = new_matrix(4, 4);
-  add_point(edges,3,6,12);
-  print_matrix(edges);
-  add_edge(edges,10,15,30,150,200,10);
-  print_matrix(edges);
-  add_edge(edges,9,9,3,1,2,300);
-  print_matrix(edges);
-  scalar_mult(2,edges);
-  print_matrix(edges);
-  m0=new_matrix(4,4);
-  add_edge(m0,10,15,30,150,200,10);
-  printf("M0 matrix. m0 * edges:\n\n");
-  print_matrix(m0);
-  matrix_mult(m0,edges);
-  print_matrix(edges);
-  //ident(edges);
-  //print_matrix(edges);
-  //transform = new_matrix(4, 4);
-
-  
-  //free_matrix( transform );
+  struct matrix *transformation;
+  //Made too small to prove I can add columns
+  edges=new_matrix(4,2);
+  //A loop to make 100 squares and shift em and stuff
+  int n;
+  for (n=0;n<100;n++){
+    edges=new_matrix(4,2);
+    //Make a square
+    add_edge(edges,0,0,0,10,0,0);
+    add_edge(edges,0,0,0,0,10,0);
+    add_edge(edges,0,10,0,10,10,0);
+    add_edge(edges,10,0,0,10,10,0);
+    //Scale square
+    scalar_mult((n/3)+1,edges);
+    //Scale it along different axes
+    //Rotate it
+   
+    //Translate it
+    transformation=make_translate(n*2,n*2,0);
+    matrix_mult(transformation,edges);
+    draw_lines(edges,s,c);
+    free_matrix( edges );
+    free_matrix(transformation);
+  }
   free_matrix( edges );
-  free_matrix(m0);
+  display(s);
+  save_extension(s, "lines.png");
 }  

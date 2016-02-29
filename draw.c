@@ -52,9 +52,6 @@ void draw_lines( struct matrix * points, screen s, color c) {
   int col;
   for (col=0;col<points->cols-1;col++)
     draw_line(points->m[0][col],points->m[1][col],points->m[0][col+1],points->m[1][col+1],s,c);
-  //Make sure we have at least 3 points, because why not. Could stop us retracing a line
-  if (col>1)
-    draw_line(points->m[0][col],points->m[1][col],points->m[0][0],points->m[1][0],s,c);
 }
 
 
