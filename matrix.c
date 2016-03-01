@@ -181,9 +181,9 @@ struct matrix * make_translate(double x, double y, double z){
   struct matrix * ans;
   ans=new_matrix(4,4);
   ident(ans);
-  ans->m[3][0]=x;
-  ans->m[3][1]=y;
-  ans->m[3][2]=z;
+  ans->m[0][3]=x;
+  ans->m[1][3]=y;
+  ans->m[2][3]=z;
   return ans;
 }
 
